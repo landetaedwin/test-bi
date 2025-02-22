@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 
 @Component({
@@ -8,16 +9,39 @@ import { Component } from '@angular/core';
 })
 export class UploadComponent {
 
-  onFileSelected(event:any) {
-    console.log(event);
+  selectedFile: File | null = null;
+  message: string = '';
+
+  constructor(private http: HttpClient) {}
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+
+    if (file) {
+      if (file.type !== 'text/plain') {
+        this.message = 'Error: Solo se permiten archivos .txt';
+        this.selectedFile = null;
+      } else {
+        this.selectedFile = file;
+        this.message = `Archivo seleccionado: ${file.name}`;
+      }
+    }
   }
 
-  onUpload() {
-    console.log('upload');
-  }
+  uploadFile() {
+    if (!this.selectedFile) {
+      this.message = 'Por favor, seleccione un archivo válido';
+      return;
+    }
 
-  onSearch() {
-    console.log('search');
-  }
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
 
+    this.http.post('http://localhost:8080/api/upload', formData, { responseType: 'text' })
+      .subscribe(
+        (response) => this.message = response,
+        (error) => this.message = error.error
+      );
+  }
 }
+
