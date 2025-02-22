@@ -57,6 +57,9 @@ public class ClienteService implements IUploadService {
 				//3.	Generar un algoritmo para generar y asignar la cuenta al cliente que sea de 9 dígitos
 				cliente.setCuenta(CuentaUtils.generarNumeroCuenta(9));
 
+				System.out.println(cliente.getIdentificacion());
+				System.out.println(CedulaUtils.validarCedula(cliente.getIdentificacion()));
+				
 				if (!CedulaUtils.validarCedula(cliente.getIdentificacion())) {
 					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(
 							"La identificación: " + cliente.getIdentificacion() + " no es valida."));

@@ -7,39 +7,41 @@ public class CedulaUtils {
 	 * @param cedula La cédula a validar.
 	 * @return true si la cédula es válida, false si no lo es.
 	 */
-	public static boolean validarCedula(String cedula) {
-		// Eliminar espacios en blanco y asegurarse de que la cédula tenga 10 caracteres
-		cedula = cedula.replaceAll("\\s+", "");
-
-		// Verificar que la cédula tenga exactamente 10 dígitos y que sea numérica
-		if (cedula.length() != 10 || !cedula.matches("\\d+")) {
-			return false; // No es un número de 10 dígitos
-		}
-
-		// El primer dígito debe ser 0, 1, 2, 3 (códigos de provincia)
-		int primerDigito = Character.getNumericValue(cedula.charAt(0));
-		if (primerDigito < 0 || primerDigito > 3) {
-			return false;
-		}
-
-		// Cálculo del dígito verificador
-		int[] multiplicadores = { 2, 1, 2, 1, 2, 1, 2, 1, 2 }; // Multiplicadores
+	public static boolean validarCedula(String x) {
 		int suma = 0;
+		if (x.length() == 9) {
+			return false;
+		} else {
+			int a[] = new int[x.length() / 2];
+			int b[] = new int[(x.length() / 2)];
+			int c = 0;
+			int d = 1;
+			for (int i = 0; i < x.length() / 2; i++) {
+				a[i] = Integer.parseInt(String.valueOf(x.charAt(c)));
+				c = c + 2;
+				if (i < (x.length() / 2) - 1) {
+					b[i] = Integer.parseInt(String.valueOf(x.charAt(d)));
+					d = d + 2;
+				}
+			}
 
-		// Multiplicar cada dígito por su correspondiente multiplicador
-		for (int i = 0; i < 9; i++) {
-			int digito = Character.getNumericValue(cedula.charAt(i));
-			suma += digito * multiplicadores[i];
+			for (int i = 0; i < a.length; i++) {
+				a[i] = a[i] * 2;
+				if (a[i] > 9) {
+					a[i] = a[i] - 9;
+				}
+				suma = suma + a[i] + b[i];
+			}
+			int aux = suma / 10;
+			int dec = (aux + 1) * 10;
+			if ((dec - suma) == Integer.parseInt(String.valueOf(x.charAt(x.length() - 1))))
+				return true;
+			else if (suma % 10 == 0 && x.charAt(x.length() - 1) == '0') {
+				return true;
+			} else {
+				return false;
+			}
 		}
-
-		// Calcular el dígito verificador
-		int digitoVerificador = 10 - (suma % 10);
-		if (digitoVerificador == 10) {
-			digitoVerificador = 0;
-		}
-
-		// Verificar que el último dígito coincida con el dígito verificador
-		return digitoVerificador == Character.getNumericValue(cedula.charAt(9));
 	}
 
 }
