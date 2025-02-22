@@ -19,21 +19,29 @@
                                         <th scope="col">Edad</th>
                                         <th scope="col">Fecha registro</th>
                                         <th scope="col">Correo</th>
+                                        <th scope="col">Cuenta</th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Edwin</td>
-                                        <td>Landeta</td>
-                                        <td>1722077649</td>
-                                        <td>32</td>
-                                        <td>22/02/2025</td>
-                                        <td>{{'landetaedwin@gmail.com'}}</td>
+                                    <tr *ngFor="let t of data; let i=index;">
+                                        <th scope="row">{{i}}</th>
+                                        <td>{{t.nombre}}</td>
+                                        <td>{{t.apellido}}</td>
+                                        <td>{{t.identificacion}}</td>
+                                        <td>{{t.edad}}</td>
+                                        <td>{{t.fechaRegistro}}</td>
+                                        <td>{{t.correo}}</td>
+                                        <td>{{t.cuenta}}</td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" (click)="volver()" class="btn btn-primary">Atras</button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,47 +1,54 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { ServiceService } from 'src/app/services/service.service';
 
 @Component({
   selector: 'app-upload',
-  imports: [],
   templateUrl: './upload.component.html',
-  styleUrl: './upload.component.scss'
+  styleUrls: ['./upload.component.scss']
 })
 export class UploadComponent {
 
   selectedFile: File | null = null;
-  message: string = '';
+  message = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private uploadService: ServiceService, private router: Router) { }
 
-  onFileSelected(event: any) {
+  ngOnInit() {
+    this.message = '';
+  }
+
+  onFileChange(event: any) {
     const file = event.target.files[0];
-
     if (file) {
-      if (file.type !== 'text/plain') {
-        this.message = 'Error: Solo se permiten archivos .txt';
-        this.selectedFile = null;
-      } else {
-        this.selectedFile = file;
-        this.message = `Archivo seleccionado: ${file.name}`;
-      }
+      this.selectedFile = file;
     }
   }
 
-  uploadFile() {
-    if (!this.selectedFile) {
-      this.message = 'Por favor, seleccione un archivo válido';
-      return;
+  onSubmit() {
+    this.message = '';
+    if (this.selectedFile) {
+      this.uploadFile(this.selectedFile);
     }
-
-    const formData = new FormData();
-    formData.append('file', this.selectedFile);
-
-    this.http.post('http://localhost:8080/api/upload', formData, { responseType: 'text' })
-      .subscribe(
-        (response) => this.message = response,
-        (error) => this.message = error.error
-      );
   }
+
+
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
+  uploadFile(file: File) {
+
+    this.uploadService.uploadFile(file)
+      .subscribe((response: any) => {
+        console.log('Archivo subido con éxito', response);
+        this.router.navigate(['/result']);
+      }, error => {
+        this.message = error.error.message;
+        console.error('Error al subir archivo', error);
+      });
+  }
+
+
 }
 

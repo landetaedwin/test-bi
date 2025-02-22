@@ -12,8 +12,22 @@
                             <div class="col-md-12 mt-1">
                                 <h2>Subir un archivo</h2>
                             </div>
-                            <div class="col-md-12 mt-1"> <input type="file" accept=".txt" class="form-control"></div>
-                            <div class="col-md-12 mt-1"> <button type="button" class="btn btn-primary btn-large">Enviar</button></div>
+                            <div class="col-md-12" *ngIf="message">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{message}}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-1"> <input type="file" accept=".txt" class="form-control"
+                                    (change)="onFileChange($event)"></div>
+                            <div class="col-md-12 mt-1">
+                                <div *ngIf="selectedFile">
+                                    <p>Archivo seleccionado: {{ selectedFile.name }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-1"> <button [disabled]="!selectedFile" type="button"
+                                    (click)="onSubmit()" class="btn btn-primary btn-large">Enviar</button></div>
                         </div>
                     </div>
                 </div>
